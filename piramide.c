@@ -3,7 +3,7 @@
 
 int main() {
 
-   int i, espacos, altura;
+   int i, altura;
    char symbol;
 
    scanf("%d%*c", &altura);
@@ -15,19 +15,19 @@ int main() {
       return 0;
    }
 
-   espacos = altura - 1;
-
    for (i = 0; i < altura; i++) {
 
-	    for(int j = 0; j < espacos; j ++) {
+	    for(int j = 0; j < altura - i - 1; j ++) {
 		    printf(" ");
 	    }
+
+       //o numero de caracteres eh incrementado em 2 => 1, 3, 5, 7...
+       //j <= 2*i = 2*linha_atual + 1 iteração
 	    for(int j = 0; j <= (2*i); j++) {
 		    printf("%c", symbol);
 	    }
 		
 	    printf("\n");
-	    espacos--;
    }
    return 0;
 }
