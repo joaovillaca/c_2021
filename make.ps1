@@ -1,4 +1,4 @@
-$file = 'piramide.c'
+$file = 'matrizes.c'
 $target = 'teste'
 $cargs = '-o', $target, '-Wall', '-std=c11'
 
