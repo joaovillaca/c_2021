@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define or ||
-#define DEBUG 0
+#define DEBUG 1
 
 int **alocarMatriz(int lin, int col){
 
