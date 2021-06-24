@@ -1,7 +1,7 @@
 # makefile para compilar C em
 # Windows + MingW + Powershell
 # arquivo source = argumento 1
-# nome do executavel = argumento 1 (SEM extensao .exe)
+# nome do executavel = argumento 2 (SEM extensao .exe)
 # by zerodois
 
 $file = $args[0]
@@ -15,6 +15,7 @@ if($file -eq '-help') {
     Write-Output "Opções    |   Descrição"
     Write-Output "-help     |   ajuda"
     Write-Output "-h        |   atualizar cabeçalhos"
+    exit
 }
 
 if($null -eq $file) {
@@ -64,6 +65,7 @@ elseif($headers -eq '-help') {
     Write-Output "Opções    |   Descrição"
     Write-Output "-help     |   ajuda"
     Write-Output "-h        |   ativar geração de cabeçalhos"
+    exit
 }
 else {
     Write-Output "Make falhou: argumento de cabeçalhos (headers) inválido."
