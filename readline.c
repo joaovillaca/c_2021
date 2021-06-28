@@ -1,30 +1,53 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define debug 1
+#include <string.h>
+#define debug 0
 
 char* read_line() {
 
     char* String = NULL;
-    char  letra;
-    int tamanho = 0;
+    char  letra = 'a';
+    int tamanho = 0, bufferIndex = 0;
+    char buffer[5] = "0000\0";
     
-    // Loop:
-    // ler a letra;
-    // realocar a string para colocar a proxima letra
-    // adicionar a nova letra à string
-    // se for um \n, para e entra um \0 no lugar
-    do {
-        scanf("%c", &letra);
-        tamanho++;
-        String = (char*) realloc(String, tamanho + 1);
-        if(String == NULL) return NULL;
-        String[tamanho] = '\0';
-        String[tamanho - 1] = letra;
+    // loop:
+    // lê as letras até achar \n
+    // ou até encher o buffer com 4 caracteres
+    // depois realoca a string com o tamanho do
+    // bloco lido, passa coloca esse bloco na string
+    // e limpa o buffer para a proxima iteração
+    do{
+
+        letra = getchar();
+
+        if(letra == '\n'){
+            buffer[bufferIndex] = '\0';
+        }
+        else {
+            buffer[bufferIndex] = letra;
+        }
+
+        bufferIndex++;
+
+        if(debug) printf("buffer[%d]: %s\n", bufferIndex, buffer);
+
+        if(bufferIndex == 4 || letra == '\n') {
+
+            tamanho += bufferIndex;
+            String = (char*) realloc(String, tamanho + bufferIndex);
+            if(String == NULL) {
+                return NULL;
+            }
+
+            memcpy(String + tamanho - bufferIndex, buffer, 4);
+            if(debug) puts(String);
+
+            bufferIndex = 0;
+            memset(buffer, '0', 4);
+        }
+
     } while(letra != '\n');
 
-    String = (char*) realloc(String, tamanho);
-    String[tamanho - 1] = '\0';
-    if(debug) puts(String);
     return String;
 }
 
@@ -37,12 +60,14 @@ int main(int argc, char** argv) {
         return 0;
     }
 
+    // Livro é um vetor de strings dinâmicas (sem tamanho definido)
+    // cada posição tem um char* que depois pode chamar malloc()
     char** Livro = (char**) malloc(numeroLinhas * sizeof(char*));
     if(Livro == NULL) {
         printf("Erro ao carregar o livro.\n");
         return 1;
     }
-    for(int i = 0; i < numeroLinhas+1; i++) {
+    for(int i = 0; i < numeroLinhas; i++) {
         Livro[i] = read_line();
         if(Livro[i] ==  NULL) {
             printf("Erro ao ler linha %d. (Erro ao realocar a linha na memória)\n", i + 1);
@@ -57,6 +82,7 @@ int main(int argc, char** argv) {
         return 0;
     }
 
+    // LinhasLegiveis é um vetor dinâmico de inteiros
     int* LinhasLegiveis = (int*) malloc(numeroLinhasLegiveis * sizeof(int));
     if (LinhasLegiveis == NULL) {
         printf("Erro ao carregar as linhas legiveis.\n");
@@ -71,8 +97,11 @@ int main(int argc, char** argv) {
         for(int i = 0; i < numeroLinhasLegiveis; i++) {
             printf("%d", LinhasLegiveis[i]);
         }
+        printf("\n");
     }
 
+    // Acessando e imprimindo as
+    // linhas legiveis do livro
     for(int i = 0; i < numeroLinhasLegiveis; i++) {
         puts(Livro[LinhasLegiveis[i]]);
     }
