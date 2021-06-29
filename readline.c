@@ -34,7 +34,7 @@ char* read_line() {
         if(bufferIndex == 4 || letra == '\n') {
 
             tamanho += bufferIndex;
-            String = (char*) realloc(String, tamanho + bufferIndex);
+            String = (char*) realloc(String, tamanho);
             if(String == NULL) {
                 return NULL;
             }
