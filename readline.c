@@ -3,6 +3,10 @@
 #include <string.h>
 #define debug 0
 
+// Le string sem tamanho definido via stdin
+// alocada dinamicamente na memoria
+// é carregada para a memória em blocos de 4 bytes
+// @return Ponteiro para a string alocada dinamicamente
 char* read_line() {
 
     char* String = NULL;
@@ -17,7 +21,6 @@ char* read_line() {
     // bloco lido, passa coloca esse bloco na string
     // e limpa o buffer para a proxima iteração
     do{
-
         letra = getchar();
 
         if(letra == '\n'){
@@ -39,7 +42,7 @@ char* read_line() {
                 return NULL;
             }
 
-            memcpy(String + tamanho - bufferIndex, buffer, 4);
+            memcpy(String + tamanho - bufferIndex, buffer, bufferIndex);
             if(debug) puts(String);
 
             bufferIndex = 0;
