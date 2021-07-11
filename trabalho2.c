@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <string.h>
 
 #define dbg 0
@@ -320,7 +319,7 @@ void TesteNeumann(Modelo* m) {
                     }
                     continue;
                 }
-                
+
                 if(alvo[linha][coluna] == MORTA) {
                     vizinhos_vivos = VizinhosNeumann(m, linha, coluna);
                     if (vizinhos_vivos == 3) {
