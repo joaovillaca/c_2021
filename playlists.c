@@ -54,7 +54,7 @@ int       PreviousSong(Playlist* target, int* errorFlag);
 
 // ==================================================================================
 
-char* read_line(int* errorFlag);
+char* ReadLine(int bufferSize, int* errorFlag);
 
 int main(int argc, char** argv) {
 
@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
     }
 
     char* nome = NULL;
-    nome = read_line(&error_trigger);
+    nome = ReadLine(8, &error_trigger);
     SetPlaylistName(MyPlaylist, nome, &error_trigger);
     if(error_trigger) {
         puts("Erro ao colocar nome na playlist.");
@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
     int timestamp;
 
     do {
-        scanf("%d\n", &comando);
+        scanf("%d \n", &comando);
         switch (comando) {
 
             case ADDSONG:
@@ -88,9 +88,9 @@ int main(int argc, char** argv) {
                     puts("Playlist cheia!");
                     continue;
                 }
-                songname = read_line(&error_trigger);
-                artistname = read_line(&error_trigger);
-                scanf("%d", &timestamp);
+                songname = ReadLine(8, &error_trigger);
+                artistname = ReadLine(8, &error_trigger);
+                scanf("%d \n", &timestamp);
                 Song* newsong = NewSong(&error_trigger);
                 SetSongName(newsong, songname, &error_trigger);
                 SetSongArtist(newsong, artistname, &error_trigger);
@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
                 printf("Total de musicas: %d\n", GetPlaylistSize(MyPlaylist, &error_trigger));
                 for(int i = 0; i < GetPlaylistSize(MyPlaylist, &error_trigger); i++) {
                     printf("\n");
-                    if(MyPlaylist->NowPlayingIndex == i) {
+                    if(i == MyPlaylist->NowPlayingIndex) {
                         puts("=== NOW PLAYING ===");
                     }
                     printf("(%d). '%s'\n", i+1, GetSongName(MyPlaylist->Items[i], &error_trigger));
@@ -146,8 +146,11 @@ int main(int argc, char** argv) {
     } while(comando != HALT);
 
     for(int i = 0; i < MyPlaylist->size; i++) {
+        free(MyPlaylist->Items[i]->name);
+        free(MyPlaylist->Items[i]->artist);
         free(MyPlaylist->Items[i]);
     }
+    free(MyPlaylist->name);
     free(MyPlaylist);
     return 0;
 }
@@ -402,54 +405,56 @@ int PreviousSong(Playlist* target, int* errorFlag) {
     return SUCCESS;
 }
 
-// Le string sem tamanho definido via stdin
+// Lê string sem tamanho definido via stdin
 // alocada dinamicamente na memoria
-// é carregada para a memória em blocos de 4 bytes
+// é carregada para a memória em blocos
 // @return Ponteiro para a string alocada dinamicamente
-char* read_line(int* errorFlag) {
+// @param bufferSize tamanho dos blocos de alocação
+char* ReadLine(int bufferSize, int* errorFlag) {
 
     char* String = NULL;
-    char  letra = 'a';
-    int tamanho = 0, bufferIndex = 0;
-    char buffer[5] = "0000\0";
+    char  input = 'a';
+    int tamanhoString = 0, bufferIndex = 0;
+    
+    char buffer[bufferSize]; 
+    memset(buffer, '\0', bufferSize);
     
     // loop:
     // lê as letras até achar \n
-    // ou até encher o buffer com 4 caracteres
+    // ou até encher o buffer com n caracteres
     // depois realoca a string com o tamanho do
     // bloco lido, passa coloca esse bloco na string
     // e limpa o buffer para a proxima iteração
     do{
-        letra = getchar();
+        input = getchar();
 
-        if(letra == '\n'){
+        if(input == '\n'){
             buffer[bufferIndex] = '\0';
         }
         else {
-            buffer[bufferIndex] = letra;
+            buffer[bufferIndex] = input;
         }
 
         bufferIndex++;
 
         if(debug) printf("buffer[%d]: %s\n", bufferIndex, buffer);
 
-        if(bufferIndex == 4 || letra == '\n') {
+        if(bufferIndex == bufferSize || input == '\n') {
 
-            tamanho += bufferIndex;
-            String = (char*) realloc(String, tamanho);
+            tamanhoString += bufferIndex;
+            String = (char*) realloc(String, tamanhoString);
             if(String == NULL) {
                 *errorFlag = 1;
                 return NULL;
             }
 
-            memcpy(String + tamanho - bufferIndex, buffer, bufferIndex);
+            memcpy(String + tamanhoString - bufferIndex, buffer, bufferIndex);
             if(debug) puts(String);
 
             bufferIndex = 0;
-            memset(buffer, '0', 4);
         }
 
-    } while(letra != '\n');
+    } while(input != '\n');
 
     *errorFlag = 0;
     return String;

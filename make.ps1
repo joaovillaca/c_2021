@@ -29,7 +29,7 @@ if($null -eq $target) {
     $target = 'teste'
 }
 
-$simple = '-o', $target, '-Wall', '-std=c11'
+$simple = '-o', $target, '-Wall', '-std=c11', '-g'
 $scripted = '-o', "$target *.c *.h", '-Wall', '-std=c11'
 
 if($null -eq $headers) {
