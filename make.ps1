@@ -4,6 +4,9 @@
 # nome do executavel = argumento 2 (SEM extensao .exe)
 # by zerodois
 
+Remove-Item *.log
+Remove-Item *.exe
+
 $file = $args[0]
 $target = $args[1]
 $headers = $args[2]
