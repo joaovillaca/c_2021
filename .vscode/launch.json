@@ -2,13 +2,13 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "g++.exe - Build and debug active file",
+        "name": "DEBUG",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
-        "args": [],
+        "program": "C:\\Users\\jv303\\Desktop\\c_2021\\2o_semestre\\t1_testes\\teste.exe",
+        "args": ["<","1.in"],
         "stopAtEntry": false,
-        "cwd": "${workspaceFolder}",
+        "cwd": "C:\\Users\\jv303\\Desktop\\c_2021\\2o_semestre\\t1_testes",
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
@@ -20,7 +20,7 @@
             "ignoreFailures": true
           }
         ],
-        "preLaunchTask": "C/C++: g++.exe build active file"
+        "preLaunchTask": ""
       }
     ]
   }
